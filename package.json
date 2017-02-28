@@ -1,0 +1,42 @@
+{
+  "name": "eg-circuit-breaker",
+  "version": "1.0.0",
+  "description": "Circuit breaker",
+  "main": "./dist/app.js",
+  "engines": {
+    "node": ">=4.6.0 <5.0.0"
+  },
+  "scripts": {
+    "test": "grunt testCommon"
+  },
+  "author": {
+    "name": "Estates Gazette New Product Development team",
+    "email": "NPDPropertyTeam@rbi.co.uk"
+  },
+  "license": "",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "registry": "http://sinopia.pra.rbxd.ds/"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-preset-env": "^1.1.10",
+    "code": "^4.0.0",
+    "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-shell": "^2.1.0",
+    "grunt-teamcity-status": "^1.1.0",
+    "lab": "^12.1.0",
+    "lab-teamcity-reporter": "^1.3.0",
+    "load-grunt-tasks": "^3.5.2"
+  }
+}
