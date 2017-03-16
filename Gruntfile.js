@@ -25,5 +25,5 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask("default", ["eslint", "shell:lab", "coveralls:target"]);
+  grunt.registerTask("default", ["eslint", "shell:lab"]);
 };
