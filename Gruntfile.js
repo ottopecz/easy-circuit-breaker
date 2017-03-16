@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     "shell": {
       "lab": {
         "command": "./node_modules/.bin/lab -I regeneratorRuntime,Observable,__core-js_shared__,core,System," +
-        "_babelPolyfill,asap -S -r console -m 4000 -o stdout -r html -o coverage.html 'lib'"
+        "_babelPolyfill,asap -S -r console -m 4000 -o stdout -r html -o coverage.html 'test-lib'"
       }
     },
     "eslint": {
