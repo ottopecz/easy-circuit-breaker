@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     "shell": {
       "lab": {
         "command": "./node_modules/.bin/lab -I regeneratorRuntime,Observable,__core-js_shared__,core,System," +
-        "_babelPolyfill,asap -S -r console -m 4000 -o stdout -r html -o coverage.html 'test-lib'"
+        "_babelPolyfill,asap -S -r console -m 4000 -o stdout -r lcov -o coverage.info 'test-lib'"
       }
     },
     "eslint": {
@@ -16,9 +16,14 @@ module.exports = function (grunt) {
         "test-lib/**/*.spec.js",
         "Gruntfile.js"
       ]
+    },
+    "coveralls": {
+      "target": {
+        "src": "coverage.info"
+      }
     }
   });
 
   // Default task.
-  grunt.registerTask("default", ["eslint", "shell:lab"]);
+  grunt.registerTask("default", ["eslint", "shell:lab", "coveralls:target"]);
 };

@@ -4,3 +4,4 @@ node_js:
 script:
   - ./node_modules/.bin/grunt eslint
   - ./node_modules/.bin/grunt shell:lab
+  - ./node_modules/.bin/grunt coveralls:target
