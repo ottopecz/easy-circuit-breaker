@@ -1,11 +1,9 @@
 node_modules
 test_results.txt
-coverage.html
+coverage.info
 npm-debug.log
 .*.swp
 ._*
 .DS_Store
 .git
 .idea/
-dist/
-test-dist/
