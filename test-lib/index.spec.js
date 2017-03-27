@@ -78,7 +78,7 @@ describe("The \"exec\" method of the proxy", () => {
         .then(result => {
 
           expect(promise).to.be.an.instanceOf(Promise);
-          expect(result).to.equal("aValue")
+          expect(result).to.equal("aValue");
         });
     });
   });
@@ -165,141 +165,154 @@ describe("The \"exec\" method of the proxy", () => {
       });
     });
   });
-});
 
-// describe("The \"setThresholdErrType\" method", () => {
-//
-//   describe("when it sets the threshold error type is the same like the remote err has", () => {
-//
-//     const remoteError = new TypeError("Some type error");
-//     const thresholdErrType = TypeError;
-//
-//     describe("The \"exec\" method", () => {
-//
-//       it("should open the circuit", () => {
-//
-//         function targetCallable() {
-//           return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
-//         }
-//
-//         const proxy = circuitBreaker.trap(targetCallable);
-//
-//         return proxy
-//           .setThresholdErrType(thresholdErrType)
-//           .exec()
-//           .catch(() => proxy.exec())
-//           .then(result => expect(result).to.equal("The circuit is open"));
-//       });
-//     });
-//   });
-//
-//   describe("when it sets the threshold error type is the same like the remote err has", () => {
-//
-//     const remoteError = new Error("Some i/o error");
-//     const thresholdErrType = TypeError;
-//
-//     describe("The \"exec\" method", () => {
-//
-//       it("should not open the circuit", () => {
-//
-//         function targetCallable() {
-//           return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
-//         }
-//
-//         const proxy = circuitBreaker.trap(targetCallable);
-//
-//         return proxy
-//           .setThresholdErrType(thresholdErrType)
-//           .exec()
-//           .catch(() => proxy.exec())
-//           .catch(err => expect(err).to.equal(remoteError));
-//       });
-//     });
-//   });
-// });
-//
-// describe("The \"setThresholdErrMsg\" method", () => {
-//
-//   describe("when it sets the threshold error message the same like the remote err has", () => {
-//
-//     const remoteError = new Error("Remote error msg");
-//     const thresholdErrMsg = /"Remote error msg"/;
-//
-//     describe("The \"exec\" method", () => {
-//
-//       it("should open the circuit", () => {
-//
-//         function targetCallable() {
-//           return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
-//         }
-//
-//         const proxy = circuitBreaker.trap(targetCallable);
-//
-//         return proxy
-//           .setThresholdErrMsg(thresholdErrMsg)
-//           .exec()
-//           .catch(() => proxy.exec())
-//           .then(result => expect(result).to.equal("The circuit is open"));
-//       });
-//     });
-//   });
-//
-//   describe("when it sets the threshold error message the same like the remote err has", () => {
-//
-//     const remoteError = new Error("Remote error msg");
-//     const thresholdErrMsg = /"Not the remote error msg"/;
-//
-//     describe("The \"exec\" method", () => {
-//
-//       it("should not open the circuit", () => {
-//
-//         function targetCallable() {
-//           return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
-//         }
-//
-//         const proxy = circuitBreaker.trap(targetCallable);
-//
-//         return proxy
-//           .setThresholdErrMsg(thresholdErrMsg)
-//           .exec()
-//           .catch(() => proxy.exec())
-//           .catch(err => expect(err).to.equal(remoteError));
-//       });
-//     });
-//   });
-// });
-//
-// describe("The \"setHealthCheck\" method", () => {
-//
-//   describe("when it sets the health check call and the circuit opens", () => {
-//
-//     describe("The \"exec\" method", () => {
-//
-//       it("should start to running the health check on an interval", () => {
-//
-//         function targetCallable() {
-//           return new Promise((resolve, reject) => process.nextTick(() => reject(new Error("Some i/o error"))));
-//         }
-//
-//         const deferred = Q.defer();
-//         const healthChecker = {
-//           "healthCheck": spy(function healthCheck() {
-//             deferred.resolve("i/o is healthy");
-//             return deferred.promise;
-//           })
-//         };
-//         const proxy = circuitBreaker.trap(targetCallable);
-//
-//         proxy
-//           .setHealthCheck(healthChecker, "healthCheck", 0)
-//           .exec()
-//           .catch(() => proxy.exec());
-//
-//         return deferred.promise
-//           .then(result => {
-//             expect(result).to.equal("i/o is healthy");
-//           });
-//       });
-//     });
-//   });
-// });
+  describe("when the threshold error type is set to one which has already exceeded the threshold limit", () => {
+
+    const remoteError = new TypeError("Some type error");
+    const thresholdErrType = TypeError;
+
+    it("should open the circuit", () => {
+
+      function targetCallable() {
+        return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
+      }
+
+      const proxy = circuitBreaker.trap(targetCallable);
+
+      return proxy
+        .setThresholdErrType(thresholdErrType)
+        .exec()
+        .catch(() => proxy.exec())
+        .then(result => expect(result).to.equal("The circuit is open"));
+    });
+  });
+
+  describe("when the threshold error type is not set to one which has already exceeded the threshold limit", () => {
+
+    const remoteError = new Error("Some i/o error");
+    const thresholdErrType = TypeError;
+
+    it("should not open the circuit", () => {
+
+      function targetCallable() {
+        return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
+      }
+
+      const proxy = circuitBreaker.trap(targetCallable);
+
+      return proxy
+        .setThresholdErrType(thresholdErrType)
+        .exec()
+        .catch(() => proxy.exec())
+        .catch(err => expect(err).to.equal(remoteError));
+    });
+  });
+
+  describe("when the threshold error message is set to one which has already exceeded the threshold limit", () => {
+
+    const remoteError = new Error("Remote error msg");
+    const thresholdErrMsg = /"Remote error msg"/;
+
+
+    it("should open the circuit", () => {
+
+      function targetCallable() {
+        return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
+      }
+
+      const proxy = circuitBreaker.trap(targetCallable);
+
+      return proxy
+        .setThresholdErrMsg(thresholdErrMsg)
+        .exec()
+        .catch(() => proxy.exec())
+        .then(result => expect(result).to.equal("The circuit is open"));
+    });
+  });
+
+  describe("when the threshold error message is set to one which has already exceeded the threshold limit", () => {
+
+    const remoteError = new Error("Remote error msg");
+    const thresholdErrMsg = /"Not the remote error msg"/;
+
+    it("should not open the circuit", () => {
+
+      function targetCallable() {
+        return new Promise((resolve, reject) => process.nextTick(() => reject(remoteError)));
+      }
+
+      const proxy = circuitBreaker.trap(targetCallable);
+
+      return proxy
+        .setThresholdErrMsg(thresholdErrMsg)
+        .exec()
+        .catch(() => proxy.exec())
+        .catch(err => expect(err).to.equal(remoteError));
+    });
+  });
+
+  describe("when the health check is set and the circuit opens", () => {
+
+    it("should start to running the health check on an interval", () => {
+
+      function targetCallable() {
+        return new Promise((resolve, reject) => process.nextTick(() => reject(new Error("Some i/o error"))));
+      }
+
+      const deferred = Q.defer();
+      const healthChecker = {
+        "healthCheck": spy(function healthCheck() {
+          deferred.resolve("i/o is healthy");
+          return deferred.promise;
+        })
+      };
+      const proxy = circuitBreaker.trap(targetCallable);
+
+      proxy
+        .setHealthCheck(healthChecker, "healthCheck", 0)
+        .exec()
+        .catch(() => proxy.exec());
+
+      return deferred.promise
+        .then(() => expect(healthChecker.healthCheck.calledOnce).to.be.true());
+    });
+  });
+
+  // describe.skip("when the health check returns with success (the i/o is healthy)", () => {
+  //
+  //   it("should close the circuit and call the trapped callable again", () => {
+  //
+  //     /* eslint-disable func-style */
+  //     let targetCallable = function targetCallable() {
+  //       return new Promise((resolve, reject) => process.nextTick(() => reject(new Error("Some i/o error"))));
+  //     };
+  //     /* eslint-enable func-style */
+  //
+  //     const deferred = Q.defer();
+  //     const healthChecker = {
+  //       "healthCheck": spy(function healthCheck() {
+  //         deferred.resolve("i/o is healthy");
+  //         return deferred.promise;
+  //       })
+  //     };
+  //     const proxy = circuitBreaker.trap(targetCallable);
+  //
+  //     proxy
+  //       .setHealthCheck(healthChecker, "healthCheck", 0)
+  //       .exec()
+  //       .catch(() => proxy.exec());
+  //
+  //     return deferred.promise
+  //       .then(() => {
+  //
+  //         targetCallable = spy(function targetCallable() {
+  //           return new Promise(resolve => process.nextTick(() => resolve("result")));
+  //         });
+  //         return proxy.exec();
+  //       })
+  //       .then(() => console.log("bakukk"), () => {
+  //         expect(targetCallable.calledTwice).to.be.true()
+  //       });
+  //   });
+  // });
+});
