@@ -159,9 +159,11 @@ describe("The \"exec\" method of the proxy", () => {
     });
   });
 
-  describe("when when the callable is a method and it's called with some parameters", () => {
+  describe("when the callable is a method and it's called with some parameters", () => {
 
-    const target = {"callable": stub().returns({then() {}})};
+    const target = {"callable": stub().returns({
+      then() {}
+    })};
     const proxy = circuitBreaker.trap(target, "callable");
 
     it("should call the target callable with the passed params", done => {
