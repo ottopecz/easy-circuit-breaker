@@ -444,11 +444,11 @@ describe("The \"exec\" method of the proxy", () => {
 
   describe("when the health check returns with success (the i/o is healthy)", () => {
 
-    let targetCallable = spy(function callable(resolve) {
+    const targetCallable = spy(function callable(isResolving) {
 
-      return !resolve ?
-        new Promise((resolve, reject) => process.nextTick(() => reject(new Error("Some i/o error")))) :
-        new Promise(resolve => process.nextTick(() => resolve("result")));
+      return !isResolving
+        ? new Promise((resolve, reject) => process.nextTick(() => reject(new Error("Some i/o error"))))
+        : new Promise(resolve => process.nextTick(() => resolve("result")));
     });
 
     const deferred = Q.defer();
@@ -476,6 +476,39 @@ describe("The \"exec\" method of the proxy", () => {
           });
         })
         .then(() => expect(targetCallable.calledOnce).to.be.true());
+    });
+  });
+});
+
+describe("The \"setThresholdNum\" method", () => {
+
+  function targetCallable() {
+    return new Promise(resolve => process.nextTick(() => resolve("result")));
+  }
+
+  const proxy = circuitBreaker.trap(targetCallable);
+
+  describe("when the parameter is not number", () => {
+
+    it("should throw a type error", done => {
+
+      const thresholdNum = "1";
+
+      expect(() => proxy.setThresholdNum(thresholdNum))
+        .to.throw(TypeError, "The parameter has to be a number");
+      done();
+    });
+  });
+
+  describe("when the parameter is less than 0", () => {
+
+    it("should throw a range error", done => {
+
+      const thresholdNum = -1;
+
+      expect(() => proxy.setThresholdNum(thresholdNum))
+        .to.throw(RangeError, "The parameter has to be greater or equal to 0");
+      done();
     });
   });
 });
@@ -650,7 +683,19 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check is set as a object/objct", () => {
+  describe("when the health check is set as a number", () => {
+
+    const healthChecker = 1;
+
+    it("should throw a type error", done => {
+
+      expect(() => proxy.setHealthCheck(healthChecker, 0))
+        .to.throw(TypeError, "The parameter has to be either a function or a method");
+      done();
+    });
+  });
+
+  describe("when the health check is set as a object/object", () => {
 
     const healthChecker = {};
     const healthCheck = {};
@@ -665,7 +710,13 @@ describe("The \"setHealthCheck\" method", () => {
 
   describe("when the health check is set as a string/object", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
     it("should throw a type error", done => {
 
@@ -675,9 +726,15 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check inter val is not set", () => {
+  describe("when the health check interval is not set", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
     it("should throw a type error", done => {
 
@@ -687,9 +744,15 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check inter val is set as string", () => {
+  describe("when the health check interval is set as string", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
     it("should throw a type error", done => {
 
@@ -699,9 +762,15 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check inter val is set as boolean", () => {
+  describe("when the health check interval is set as boolean", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
     it("should throw a type error", done => {
 
@@ -711,9 +780,15 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check inter val is set as boolean", () => {
+  describe("when the health check interval is set as boolean", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
     it("should throw a type error", done => {
 
@@ -723,13 +798,36 @@ describe("The \"setHealthCheck\" method", () => {
     });
   });
 
-  describe("when the health check inter val is set to 0", () => {
+  describe("when the health check interval is set to 0", () => {
 
-    const healthChecker = {healthCheck() {return {then() {}}}};
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
 
-    it("should throw a type error", done => {
+    it("should not throw a type error", done => {
 
       expect(() => proxy.setHealthCheck(healthChecker, "healthCheck", 0).to.not.throw());
+      done();
+    });
+  });
+
+  describe("when the health check interval is set to a number", () => {
+
+    const healthChecker = {
+      healthCheck() {
+        return {
+          then() {}
+        };
+      }
+    };
+
+    it("should not throw a type error", done => {
+
+      expect(() => proxy.setHealthCheck(healthChecker, "healthCheck", 1).to.not.throw());
       done();
     });
   });
